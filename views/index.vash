@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL</title>
+    <style>
+        table, th, tr, td{
+            border-collapse: collapse;
+            border: 1px solid #8a8a8a;
+        }
+        a:visited{
+            color: blue;
+        }
+        .col{
+            display: inline-block;
+            vertical-align: text-top;
+        }
+        .hdr{
+            text-align: right;
+        }
+    </style>
+    <script type="text/javascript" src="/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            //alert('It Working...!!!');
+            $('.std').click(function(){
+                $('#regno').val($(this).attr("regno"));
+                $('form').submit();
+            })
+
+            $('.txt').focusout(function(){
+                let row = $(this).parent().parent().children();
+                let total = Number($(row).eq(2).text())
+                let prev = Number($(row).eq(4).text())
+                if($(this).val() > total || $(this).val() < 0 ){
+                    $('#error').text('Not Allowed')
+                    $(this).val(prev)
+                    $(this).focus();
+                }else{
+                    if($(this).val() !== prev){
+                        $(this).focus();
+                        $('#hid').val($(row).eq(0).text())
+                        $('#mark').val($(this).val())
+                        $('form').submit();
+
+                    }
+                    $('#error').text('')
+                }
+            })
+
+        })
+    </script>
+</head>
+<body>
+    <h4>Recap Sheet</h4>
+   <form method="post">
+    <div class="col">
+    <input type="hidden" name="regno" id="regno" placeholder="regno" size="4" value="@(model.regno != null? model.regno:'')">
+    <input type="hidden" name="hid" id="hid" placeholder="hid" size="2">
+    <input type="hidden" name="mark" id="mark" placeholder="mark" size="2">  
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Reg. No.</th>
+            @model.heads.forEach(function(head){
+                <th>@head.headname</th>
+            })
+            <td>Total</td>
+            <td>Grade</td>
+        </tr>
+      
+        @model.students.forEach(function(student){
+
+            <tr>
+                <td>
+                    <a href="#" class="std" regno="@student.regno">@student.name</a> 
+                </td>
+                <td>@student.regno</td>
+                @{
+                    var total = 0;
+                }                  
+                @student.marks.forEach(function(mark){
+                    @{
+                        total += mark.marks
+                    }
+                    <td>@mark.marks</td>
+                })
+                <td>@total</td>
+                @{
+                    var letter = '';
+                    model.grades.forEach(function(grade){
+                        if(total >= grade.start && total <= grade.end){
+                            letter = grade.grade
+                        }
+                    })
+                }
+                <td>@letter</td>
+            </tr>
+        })
+
+    </table>
+    </div>
+    <div class="col">
+        @if(model.student != null){
+            <table>
+                <tr>
+                    <th class="hdr">Reg. No : </th>
+                    <td>@model.student.regno</td>
+                </tr>
+                <tr>
+                    <th class="hdr">Name : </th>
+                    <td>@model.student.name</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>hid</th>
+                    <th>Head</th>
+                    <th>Total</th>
+                    <th>Marks</th>
+                    
+                </tr>
+                @model.student.marks.forEach(function(mark){
+                    <tr>
+                        <td>@mark.hid</td>
+                        <th class="hdr">@mark.head.headname@::</th>
+                        <td>@mark.head.total</td>
+                        <td>
+                            <input type="text" class="txt" value="@mark.marks" size="2"> 
+                        </td>
+                        <td style="display: none;">@mark.marks</td>
+                    </tr>
+                })
+            </table>
+            <div id="error" style="color: red;"></div>    
+            
+        }
+    </div>
+    </form>     
+
+
+</body>
+</html>

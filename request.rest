@@ -1,0 +1,19 @@
+POST http://localhost:4200/graphql
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+{
+  marks {
+    hid
+    mid
+    student {
+      regno
+      name
+    }
+    marks
+    head {
+      headname
+      total
+    }
+  }
+}

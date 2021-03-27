@@ -1,0 +1,21 @@
+{
+  "name": "graphql-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e vash,js server.js  "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.21.2",
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "mongoose": "^5.12.2",
+    "morgan": "^1.10.0",
+    "vash": "^0.13.0"
+  }
+}
